@@ -5,8 +5,9 @@ use App\Controllers\MovieController;
 use App\Kernel\Router\Route;
 
 return [
-  Route::get(uri: '/', action: [HomeController::class, 'index']),
-  Route::get(uri: '/home', action: [HomeController::class, 'index']),
-  Route::get(uri: '/movies', action: [MovieController::class, 'index']),
-  // Route::get(uri: '/test', action: function () { echo 'Test page'; }),
+  Route::get('/', [HomeController::class, 'index']),
+  Route::get('/home', [HomeController::class, 'index']),
+  Route::get('/movies', [MovieController::class, 'index']),
+  Route::get('/admin/movies/add', [MovieController::class, 'add']),
+  Route::post('/admin/movies/add', [MovieController::class, 'store']),
 ];
