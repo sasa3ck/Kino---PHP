@@ -14,13 +14,11 @@ class Route
   public static function get(string $uri, $action): static
   {
     return new static(uri: $uri, method: 'GET', action: $action);
-    // return new static($uri, 'GET', $action);
   }
 
   public static function post(string $uri, $action): static
   {
     return new static(uri: $uri, method: 'POST', action: $action);
-    // return new static($uri, 'POST', $action);
   }
 
   public function getUri(): string
