@@ -2,9 +2,11 @@
 
 namespace App\Kernel\Router;
 
+use App\Kernel\Auth\AuthInterface;
 use App\Kernel\Database\DataBaseInterface;
 use App\Kernel\Http\RedirectInterface;
 use App\Kernel\Http\RequestInterface;
+use App\Kernel\Middleware\AbstractMiddleware;
 use App\Kernel\Session\SessionInterface;
 use App\Kernel\View\ViewInterface;
 
@@ -20,7 +22,8 @@ class Router implements RouterInterface
     private RequestInterface $request,
     private RedirectInterface $redirect,
     private SessionInterface $session,
-    private DataBaseInterface $database
+    private DataBaseInterface $database,
+    private AuthInterface $auth
   ) {
     $this->initRoutes();
   }
@@ -31,6 +34,14 @@ class Router implements RouterInterface
 
     if (!$route)
       $this->notFound();
+
+    if ($route->hasMiddlewares()) {
+      foreach ($route->getMiddlewares() as $middleware) {
+        /** @var AbstractMiddleware $middleware */
+        $middleware = new $middleware($this->request, $this->auth, $this->redirect);
+        $middleware->handle();
+      }
+    }
 
     if (is_array($route->getAction())) {
       [$controller, $action] = $route->getAction();
@@ -43,6 +54,7 @@ class Router implements RouterInterface
       call_user_func([$controller, 'setRedirect'], $this->redirect);
       call_user_func([$controller, 'setSession'], $this->session);
       call_user_func([$controller, 'setDatabase'], $this->database);
+      call_user_func([$controller, 'setAuth'], $this->auth);
 
       // $controller->$action();
       call_user_func([$controller, $action]);

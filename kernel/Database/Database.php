@@ -3,6 +3,7 @@
 namespace App\Kernel\Database;
 
 use App\Kernel\Config\ConfigInterface;
+use PDO;
 
 class Database implements DataBaseInterface
 {
@@ -30,6 +31,21 @@ class Database implements DataBaseInterface
     }
 
     return (int) $this->pdo->lastInsertId();
+  }
+
+  public function first(string $table, array $conditions = []): ?array
+  {
+    $where = '';
+
+    if (count($conditions) > 0) {
+      $where = 'WHERE ' . implode(' AND ', array_map(fn($field) => "$field = :$field", array_keys($conditions)));
+    }
+
+    $sql = "SELECT * FROM $table $where LIMIT 1";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($conditions);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result ?: null;
   }
 
   private function connect(): void
