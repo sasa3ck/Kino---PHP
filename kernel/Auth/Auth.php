@@ -57,12 +57,17 @@ class Auth implements AuthInterface
     if ($user) {
       return new User(
         $user['id'],
+        $user['name'],
         $user[$this->username()],
         $user[$this->password()],
       );
     }
 
     return null;
+  }
+
+  public function id(): ?int {
+    return $this->session->get($this->sessionField());
   }
 
   public function table(): string

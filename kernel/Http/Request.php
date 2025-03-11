@@ -53,7 +53,7 @@ class Request implements RequestInterface
     );
   }
 
-  public function validator(array $rules): bool
+  public function validate(array $rules): bool
   {
     $data = [];
 

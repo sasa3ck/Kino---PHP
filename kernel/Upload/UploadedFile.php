@@ -41,4 +41,9 @@ class UploadedFile implements UploadedFileInterface
   {
     return pathinfo($this->name, PATHINFO_EXTENSION);
   }
+
+  public function hasError(): string
+  {
+    return $this->error != UPLOAD_ERR_OK;
+  }
 }

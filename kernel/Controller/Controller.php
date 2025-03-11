@@ -20,9 +20,9 @@ abstract class Controller
   private AuthInterface $auth;
   private StorageInterface $storage;
 
-  public function view(string $name): void
+  public function view(string $name, array $data = [], $title = ''): void
   {
-    $this->view->page($name);
+    $this->view->page($name, $data, $title);
   }
 
   public function setView(ViewInterface $view): void

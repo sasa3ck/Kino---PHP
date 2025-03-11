@@ -8,7 +8,7 @@ class LoginController extends Controller
 {
   public function index(): void
   {
-    $this->view('login');
+    $this->view(name: 'login', title: "Вход");
   }
 
   public function login(): void
@@ -16,8 +16,12 @@ class LoginController extends Controller
     $email = $this->request()->input('email');
     $password = $this->request()->input('password');
 
-    $this->auth()->attempt($email, $password);
-    $this->redirect('/home');
+    if ($this->auth()->attempt($email, $password)) {
+      $this->redirect('/');
+    }
+
+    $this->session()->set('error', 'Неверный логин или пароль');
+    $this->redirect('/login');
   }
 
   public function logout(): void
